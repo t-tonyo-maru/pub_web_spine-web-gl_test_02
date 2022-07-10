@@ -56,7 +56,16 @@ class App implements spine.SpineCanvasApp {
     }
   }
 
-  update = (canvas: spine.SpineCanvas, delta: number) => {}
+  update = (canvas: spine.SpineCanvas, delta: number) => {
+    if (!(this.animationState instanceof spine.AnimationState)) return
+    if (!(this.skeleton instanceof spine.Skeleton)) return
+    // delta タイムを用いてアニメーションを更新
+    this.animationState.update(delta)
+    // アニメーションを skeleton データに適用
+    this.animationState.apply(this.skeleton)
+    // skeleton データにボーンの更新をさせる
+    this.skeleton.updateWorldTransform()
+  }
 
   render = (canvas: spine.SpineCanvas) => {}
 
