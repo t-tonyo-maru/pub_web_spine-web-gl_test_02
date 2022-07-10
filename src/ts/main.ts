@@ -18,18 +18,42 @@ window.onload = () => {
 }
 
 class App implements spine.SpineCanvasApp {
-  // private skeleton: spine.Skeleton
-  // private state: spine.AnimationState
+  private skeleton: unknown
+  private state: unknown
+
+  constructor() {}
 
   loadAssets = (canvas: spine.SpineCanvas) => {
+    // skeleton(json 形式) をロード
     canvas.assetManager.loadJson('model.json')
+    // atlas ファイルをロード
     canvas.assetManager.loadTextureAtlas('model.atlas')
   }
+
   initialize = (canvas: spine.SpineCanvas) => {
-    console.log('canvas')
-    console.log(canvas)
+    const assetManager = canvas.assetManager
+    // テクスチャアトラスを生成
+    const atlas = assetManager.require('model.atlas')
+    // AtlasAttachmentLoader（リージョン、メッシュ、バウンディングボックス、パスのアタッチメントを解決するための要素）を生成
+    const atlasLoader = new spine.AtlasAttachmentLoader(atlas)
+    // skeleton Json インスタンスを生成
+    const skeletonJson = new spine.SkeletonJson(atlasLoader)
+    // パース時に適用するスケールを設定
+    skeletonJson.scale = 1
+    // ファイルをパース
+    const skeletonData = skeletonJson.readSkeletonData(
+      assetManager.require('model.json')
+    )
+    // 新規スケルトンを生成
+    this.skeleton = new spine.Skeleton(skeletonData)
   }
+
   update = (canvas: spine.SpineCanvas, delta: number) => {}
+
   render = (canvas: spine.SpineCanvas) => {}
-  error = (canvas: spine.SpineCanvas, errors: spine.StringMap<string>) => {}
+
+  error = (canvas: spine.SpineCanvas, errors: spine.StringMap<string>) => {
+    console.log(canvas)
+    console.log(errors)
+  }
 }
