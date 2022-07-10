@@ -67,7 +67,23 @@ class App implements spine.SpineCanvasApp {
     this.skeleton.updateWorldTransform()
   }
 
-  render = (canvas: spine.SpineCanvas) => {}
+  render = (canvas: spine.SpineCanvas) => {
+    if (!(this.skeleton instanceof spine.Skeleton)) return
+    const renderer = canvas.renderer
+
+    // SP でうまくリサイズできないため、コメントアウト
+    // renderer.resize(spine.ResizeMode.Expand)
+
+    // canvas をクリア
+    canvas.clear(0.2, 0.2, 0.2, 1)
+
+    // レンダリング: 開始
+    renderer.begin()
+    // skeleton を描画
+    renderer.drawSkeleton(this.skeleton, true)
+    // レンダリング: 完了
+    renderer.end()
+  }
 
   error = (canvas: spine.SpineCanvas, errors: spine.StringMap<string>) => {
     console.log(canvas)
