@@ -19,7 +19,7 @@ window.onload = () => {
 
 class App implements spine.SpineCanvasApp {
   private skeleton: unknown
-  private state: unknown
+  private animationState: unknown
 
   constructor() {}
 
@@ -32,12 +32,14 @@ class App implements spine.SpineCanvasApp {
 
   initialize = (canvas: spine.SpineCanvas) => {
     const assetManager = canvas.assetManager
+
     // テクスチャアトラスを生成
     const atlas = assetManager.require('model.atlas')
     // AtlasAttachmentLoader（リージョン、メッシュ、バウンディングボックス、パスのアタッチメントを解決するための要素）を生成
     const atlasLoader = new spine.AtlasAttachmentLoader(atlas)
     // skeleton Json インスタンスを生成
     const skeletonJson = new spine.SkeletonJson(atlasLoader)
+
     // パース時に適用するスケールを設定
     skeletonJson.scale = 1
     // ファイルをパース
@@ -46,6 +48,12 @@ class App implements spine.SpineCanvasApp {
     )
     // 新規スケルトンを生成
     this.skeleton = new spine.Skeleton(skeletonData)
+    // AnimationStateを作成し、`idle` アニメーションをセット
+    const animationStateData = new spine.AnimationStateData(skeletonData)
+    this.animationState = new spine.AnimationState(animationStateData)
+    if (this.animationState instanceof spine.AnimationState) {
+      this.animationState.setAnimation(0, 'idle', true)
+    }
   }
 
   update = (canvas: spine.SpineCanvas, delta: number) => {}
