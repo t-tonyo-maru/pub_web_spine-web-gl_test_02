@@ -48,6 +48,13 @@ class App implements spine.SpineCanvasApp {
     )
     // 新規スケルトンを生成
     this.skeleton = new spine.Skeleton(skeletonData)
+
+    // skeleton データの位置を初期化。おそらく spine.SpineCanvas の原点(0, 0)は中央
+    if (this.skeleton instanceof spine.Skeleton) {
+      this.skeleton.x = 0
+      this.skeleton.y = window.innerHeight * (-1 / 2)
+    }
+
     // AnimationStateを作成し、`idle` アニメーションをセット
     const animationStateData = new spine.AnimationStateData(skeletonData)
     this.animationState = new spine.AnimationState(animationStateData)
